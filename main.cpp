@@ -243,8 +243,9 @@ void print_help()
     cout << "*** Follows the syntax of linux shell commands ***" << endl << endl;
     cout << "\tls - list directory" << endl;
     cout << "\tcd - change directory" << endl;
+    cout << "\ttree - display the files/directory in tree view" << endl;
     cout << "\tpwd - print working directory" << endl;
-    cout << "\tfind - find file" << endl;
+    cout << "\tfind - find file/directory path by name" << endl;
     cout << "\tstat - display file/directory information" << endl;
     cout << "\tcp - copy file" << endl;
     cout << "\tmv - move file" << endl;
@@ -486,6 +487,7 @@ TreeNode* create(TreeNode* root, TreeNode* pwd, string path, char type)
         cin >> choice;
         if (choice != "y" && choice != "Y" && choice != "yes" && choice != "Yes")
             return NULL;
+        remove(root, new_pwd, name);
     }
 
     temp = new TreeNode(new_pwd, name);
@@ -542,6 +544,9 @@ void dupl(TreeNode* root, TreeNode* pwd, string src, string dst, int keep)
         cout << "the file or directory '" << src << "' does not exist" << endl;
         return;
     }
+    string src_cdate = src_node->cdate;
+    int src_perm = src_node->perm;
+    list<string> src_content = src_node->content;
 
     TreeNode* dst_node = find_node(root, pwd, dst);
     if (dst_node != NULL && dst_node->type == 'd')
@@ -552,7 +557,9 @@ void dupl(TreeNode* root, TreeNode* pwd, string src, string dst, int keep)
     TreeNode* new_node = create(root, pwd, dst, src_node->type);
     if (new_node != NULL)
     {
-        new_node->cdate = src_node->cdate;
+        new_node->cdate = src_cdate;
+        new_node->perm = src_perm;
+        new_node->content = src_content;
     }
     else
         return;
@@ -606,31 +613,35 @@ void edit(TreeNode* root, TreeNode* pwd, string path)
         return;
     }
 
-    if (temp->perm < 4)
+    if (!temp->content.empty())
     {
-        cout << "you don't have permission to read '" << path << "'" << endl;
-    }
-    else
-    {
-        list<string> old_content = temp->content;
-        cout << "content: " << endl;
-        for (list<string>::iterator it = old_content.begin(); it != old_content.end(); it++)
-            cout << *it << endl;
+        if (temp->perm < 4)
+        {
+            cout << "you don't have permission to read '" << path << "'" << endl;
+        }
+        else
+        {
+            list<string> old_content = temp->content;
+            cout << "content: " << endl;
+            for (list<string>::iterator it = old_content.begin(); it != old_content.end(); it++)
+                cout << *it << endl;
+        }
+
+        if (temp->perm < 2 || temp->perm == 4 || temp->perm == 5)
+        {
+            cout << "you don't have permission to write '" << path << "'" << endl;
+            return;
+        }
+        
+        string choice = "";
+        cout << endl << "overwrite? (y/n) ";
+        cin >> choice;
+        if (choice != "y" && choice != "Y" && choice != "yes" && choice != "Yes")
+            return;
     }
 
-    if (temp->perm < 2 || temp->perm == 4 || temp->perm == 5)
-    {
-        cout << "you don't have permission to write '" << path << "'" << endl;
-        return;
-    }
-    string choice = "";
-    cout << endl << "overwrite? (y/n) ";
-    cin >> choice;
-    if (choice != "y" && choice != "Y" && choice != "yes" && choice != "Yes")
-        return;
-    
     temp->content.clear();
-    cout << "new content (enter \\n to save): " << endl;
+    cout << endl << temp->name << " : (enter \\n to save)" << endl;
     string line;
     while (1)
     {
