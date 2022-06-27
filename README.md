@@ -1,4 +1,24 @@
-# File Management System
+# File Management System <!-- omit in toc -->
+
+**Table of Contents**
+- [Defining the Problem Statement:](#defining-the-problem-statement)
+- [Selecting the Data Structure:](#selecting-the-data-structure)
+- [Execution of Solution:](#execution-of-solution)
+- [Algorithms](#algorithms)
+  - [print_tree(root, prev_struct)](#print_treeroot-prev_struct)
+  - [print_ls(node=pwd->child)](#print_lsnodepwd-child)
+  - [pwd_str(root, pwd)](#pwd_strroot-pwd)
+  - [find_names(root, pwd, name)](#find_namesroot-pwd-name)
+  - [find_on_pwd(pwd, name)](#find_on_pwdpwd-name)
+  - [find_node(root, pwd, path)](#find_noderoot-pwd-path)
+  - [cd(root, pwd, path)](#cdroot-pwd-path)
+  - [create(root, pwd, path, type)](#createroot-pwd-path-type)
+  - [remove(root, pwd, path)](#removeroot-pwd-path)
+  - [dupl(root, pwd, src_path, dst_path, keep)](#duplroot-pwd-src_path-dst_path-keep)
+  - [cat(root, pwd, path)](#catroot-pwd-path)
+  - [edit(root, pwd, path)](#editroot-pwd-path)
+  - [chmod(root, pwd, path, new_modes)](#chmodroot-pwd-path-new_modes)
+- [Dry Run](#dry-run)
 
 ## Defining the Problem Statement:
 
@@ -69,7 +89,7 @@ Linux shell. Some key commands are:
 
 Examples:
 
-```
+```bash
 cd /home/user
 ls
 tree /
@@ -101,15 +121,16 @@ list<string> content <br />
 char type <br />
 string create_time <br />
 string modify_time <br />
+int perm <br />
 node pointer link <br />
 node pointer child <br />
 node pointer parent <br />
 
 **n** = Total number of nodes ; **m** = number of nodes in a directory ; **h** = height of tree
 
-
+---
 ### print_tree(root, prev_struct)
-> This algorithm prints all node names from root in a form of tree
+This algorithm prints all node names from root in a form of tree
 ```python
 START
 1.  if  (root is not null)
@@ -123,9 +144,9 @@ STOP
 > Time Complexity = O(n) <br />
 Auxiliary Space = O(n)
 
-
+---
 ### print_ls(node=pwd->child)
-> This algorithm prints all node name in a directory
+This algorithm prints all node name in a directory
 ```python
 START
 1.  if (node in not null)
@@ -137,9 +158,9 @@ STOP
 > Time Complexity = O(m) <br />
 Auxiliary Space = O(1)
 
-
+---
 ### pwd_str(root, pwd) 
-> This algorithm returns the complete path of a node with respect to root 
+This algorithm returns the complete path of a node with respect to root 
 ```python
 START 
 1.  set path to empty string 
@@ -156,9 +177,9 @@ STOP
 > Time Complexity = O(h) <br />
 Auxiliary Space = O(h)
 
-
+---
 ### find_names(root, pwd, name)
-> This algorithm returns the complete list of all nodes' path containing a given string
+This algorithm returns the complete list of all nodes' path containing a given string
 ```python
 START
 1.  declare static list of string result
@@ -179,9 +200,9 @@ STOP
 > Time Complexity = O(n*h) <br />
 Auxiliary Space = O(n)
 
-
+---
 ### find_on_pwd(pwd, name)
-> This algorithm returns the node of desired name on present working directory
+This algorithm returns the node of desired name on present working directory
 ```python
 START
 1.  set pwd to pwd->child
@@ -196,9 +217,9 @@ STOP
 > Time Complexity = O(m) <br />
 Auxiliary Space = O(1)
 
-
+---
 ### find_node(root, pwd, path)
-> This algorithm returns the node of desired path with respect to root or pwd
+This algorithm returns the node of desired path with respect to root or pwd
 ```python
 START
 1.  get parent_path and name from path
@@ -210,9 +231,9 @@ STOP
 > Time Complexity = O(m*h) <br />
 Auxiliary Space = O(1)
 
-
+---
 ### cd(root, pwd, path)
-> This algorithm returns the directory of desired path with respect to root or pwd
+This algorithm returns the directory of desired path with respect to root or pwd
 ```python
 START
 1.  set path_list to split(path, '/')
@@ -248,9 +269,9 @@ STOP
 > Time Complexity = O(m*h) <br />
 Auxiliary Space = O(h)
 
-
+---
 ### create(root, pwd, path, type)
-> This algorithm creates and returns a new node of the given path and type
+This algorithm creates and returns a new node of the given path and type
 ```python
 START
 1.  get parent_path and name from path
@@ -262,7 +283,7 @@ START
 4.  set node to find_on_pwd(new_pwd, name)
 5.  if (new_pwd is not null)
         print path already exists
-        if (don't want to overwrite) return null
+        if (do not want to overwrite) return null
         remove(root, new_pwd, name)
     end if
 6.  set node to new TreeNode(new_pwd, name)
@@ -283,9 +304,9 @@ STOP
 > Time Complexity = O(m*h) <br />
 Auxiliary Space = O(1)
 
-
+---
 ### remove(root, pwd, path)
-> This algorithm removes the node of given path
+This algorithm removes the node of given path
 ```python
 START
 1.  set node to find_node(root, pwd, path)
@@ -310,9 +331,9 @@ STOP
 > Time Complexity = O(m*h) <br />
 Auxiliary Space = O(1)
 
-
+---
 ### dupl(root, pwd, src_path, dst_path, keep)
-> This algorithm copies or moves the node from src_path to dst_path
+This algorithm copies or moves the node from src_path to dst_path
 ```python
 START
 1.  set src_node to find_node(root, pwd, src_path)
@@ -337,9 +358,9 @@ STOP
 > Time Complexity = O(m*h) <br />
 Auxiliary Space = O(1)
 
-
+---
 ### cat(root, pwd, path)
-> This algorithm displays the contents of the file in given path
+This algorithm displays the contents of the file in given path
 ```python
 START
 1.  set node to find_node(root, pwd, path)
@@ -361,9 +382,9 @@ STOP
 > Time Complexity = O(m*h) <br />
 Auxiliary Space = O(1)
 
-
+---
 ### edit(root, pwd, path)
-> This algorithm change the contents of file in given path
+This algorithm change the contents of file in given path
 ```python
 START
 1.  set node to find_node(root, pwd, path)
@@ -395,3 +416,70 @@ STOP
 ```
 > Time Complexity = O(m*h) <br />
 Auxiliary Space = O(1)
+
+---
+### chmod(root, pwd, path, new_modes)
+This algorithm changes the permissions of the node
+```python
+START
+1.  set node to find_node(root, pwd, path)
+2.  if (node is null)
+        print path does not exist
+        return
+    end if
+3.  set prev_modes to node->perm_str
+4.  if (length of new_modes is 1 and new_modes is between '0' and '7')
+        set node->perm to corresponding int value
+    end if
+5.  loop (for each character in new_modes)
+        if (character is valid permission and not in prev_modes)
+            if (new_modes[0] is '+')
+                update node->perm by adding those permissions
+            else if (new_modes[0] is '-')
+                update node->perm by removing those permissions
+            end if
+        else
+            print permission string already exists or invalid
+        end if
+    end loop
+STOP
+```
+> Time Complexity = O(m*h) <br />
+Auxiliary Space = O(1)
+
+---
+
+## Dry Run
+File System before Dry Run,
+![](media/image1.png)
+
+```bash
+cd /home/user
+```
+1. path_list = {"home", "user"}
+2. node = root
+3. looping path_list
+   1. node = find_on_pwd(node, "home")
+   2. node = find_on_pwd(node, "user")
+4. return node
+   
+```bash
+ls
+```
+1. print "Desktop/"
+2. print "Documents/"
+3. print "Downloads/"
+4. print "Pictures/"
+5. print ".bashrc"
+
+```bash
+touch prog1.c
+```
+1. parent_path = ""
+2. new_pwd = pwd
+3. node = find_on_pwd(new_pwd, "prog1.c")
+4. node = new TreeNode(new_pwd, "prog1.c")
+5. node->type = type
+6. temp = new_pwd->child
+7. when temp->link == NULL, temp->link = node
+8. return node
