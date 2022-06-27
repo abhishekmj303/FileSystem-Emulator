@@ -90,3 +90,308 @@ separate functions should **cd** into that path and run the operations.
 -   Deletion will just be like deleting a node from linked list.
 
 -   Traversal will just be like traversing binary tree in pre-order.
+
+
+## Algorithms
+
+**Structure of a node**:
+
+>string name <br />
+list<string> content <br />
+char type <br />
+string create_time <br />
+string modify_time <br />
+node pointer link <br />
+node pointer child <br />
+node pointer parent <br />
+
+**n** = Total number of nodes ; **m** = number of nodes in a directory ; **h** = height of tree
+
+
+### print_tree(root, prev_struct)
+> This algorithm prints all node names from root in a form of tree
+```python
+START
+1.  if  (root is not null)
+        set struct to prev_struct+branch
+        print struct+name
+        print_tree(root->child, struct)
+        print_tree(root->link, prev_struct)
+	end if
+STOP
+```
+> Time Complexity = O(n) <br />
+Auxiliary Space = O(n)
+
+
+### print_ls(node=pwd->child)
+> This algorithm prints all node name in a directory
+```python
+START
+1.  if (node in not null)
+    print name
+    print_ls(node->link)
+    end if
+STOP
+```
+> Time Complexity = O(m) <br />
+Auxiliary Space = O(1)
+
+
+### pwd_str(root, pwd) 
+> This algorithm returns the complete path of a node with respect to root 
+```python
+START 
+1.  set path to empty string 
+2.  if  (pwd is root)
+        return “/”
+	end if
+3.  loop (while pwd is not root)
+        set path to “/”+name+path
+        set pwd to pwd->parent
+	end loop
+4.  return path
+STOP
+```
+> Time Complexity = O(h) <br />
+Auxiliary Space = O(h)
+
+
+### find_names(root, pwd, name)
+> This algorithm returns the complete list of all nodes' path containing a given string
+```python
+START
+1.  declare static list of string result
+2.  if (root is pwd)
+        clear result
+    end if
+3.  if (pwd is not null)
+        set path to pwd_str(root, pwd)
+        if (name in path)
+            push path into end of result
+        end if
+        find_names(root, pwd->child, name)
+        find_names(root, pwd->link, name)
+    end if
+4.  return result
+STOP
+```
+> Time Complexity = O(n*h) <br />
+Auxiliary Space = O(n)
+
+
+### find_on_pwd(pwd, name)
+> This algorithm returns the node of desired name on present working directory
+```python
+START
+1.  set pwd to pwd->child
+2.  loop (while pwd is not null)
+        if (both names are same)
+            return pwd
+        end if
+        set pwd to pwd->link
+3.  return null
+STOP
+```
+> Time Complexity = O(m) <br />
+Auxiliary Space = O(1)
+
+
+### find_node(root, pwd, path)
+> This algorithm returns the node of desired path with respect to root or pwd
+```python
+START
+1.  get parent_path and name from path
+2.  set pwd to cd(root, pwd, parent_path)
+3.  if (pwd in null) return null
+4.  return find_on_pwd(pwd, name)
+STOP
+```
+> Time Complexity = O(m*h) <br />
+Auxiliary Space = O(1)
+
+
+### cd(root, pwd, path)
+> This algorithm returns the directory of desired path with respect to root or pwd
+```python
+START
+1.  set path_list to split(path, '/')
+2.  if (path_list[0] is empty string)
+        set node to root
+        pop first element from path_list
+    else if (path_list[0] = ".")
+        if (length of path_list is 1)
+            return pwd
+        else
+            set node to pwd
+            pop first element from path_list
+        end if
+    else if (path_list[0] = "..")
+        if (length of path_list is 1)
+            return pwd->parent
+        else
+            set node to pwd->parent
+            pop first element from path_list
+    else
+        set node to pwd
+    end if
+3.  loop (for each element in path_list)
+        set node to find_on_pwd(node, element)
+        if (node is not null or node is not a directory)
+            print path does not exist
+            return null
+        end if
+    end loop
+4.  return node   
+STOP
+```
+> Time Complexity = O(m*h) <br />
+Auxiliary Space = O(h)
+
+
+### create(root, pwd, path, type)
+> This algorithm creates and returns a new node of the given path and type
+```python
+START
+1.  get parent_path and name from path
+2.  set new_pwd to cd(root, pwd, parent_path)
+3.  if (new_pwd is null)
+        print parent_path does not exist
+        return null
+    end if
+4.  set node to find_on_pwd(new_pwd, name)
+5.  if (new_pwd is not null)
+        print path already exists
+        if (don't want to overwrite) return null
+        remove(root, new_pwd, name)
+    end if
+6.  set node to new TreeNode(new_pwd, name)
+7.  set node->type to type
+8.  set node->parent to new_pwd
+9. set temp to new_pwd->child
+10. if (temp is null)
+        temp = node
+        return node
+    end if
+11. loop (while temp->link is not null)
+        temp = temp->link
+    end loop
+12. temp->link = node
+13. return node
+STOP
+```
+> Time Complexity = O(m*h) <br />
+Auxiliary Space = O(1)
+
+
+### remove(root, pwd, path)
+> This algorithm removes the node of given path
+```python
+START
+1.  set node to find_node(root, pwd, path)
+2.  if (node is null)
+        print path does not exist
+        return
+    end if
+3.  if (node is not empty directory)
+        print path is not empty
+        if (not want to proceed) return
+    end if
+4.  set temp to node->parent->child
+5.  if (temp is node)
+        temp = node->link
+        return
+    end if
+6.  loop (while temp->link is not null)
+        temp = temp->link
+7.  temp->link = node->link
+STOP
+```
+> Time Complexity = O(m*h) <br />
+Auxiliary Space = O(1)
+
+
+### dupl(root, pwd, src_path, dst_path, keep)
+> This algorithm copies or moves the node from src_path to dst_path
+```python
+START
+1.  set src_node to find_node(root, pwd, src_path)
+2.  if (src_node is null)
+        print src_path does not exist
+    end if
+3.  store src_node data
+4.  set dst_node to find_node(root, pwd, dst_path)
+5.  if (dst_node is a directory)
+        set dst_path to dst_path+"/"+src_name
+    end if
+6.  set node to create(root, pwd, dst_path, src_node->type)
+7.  if (node is not null)
+        set node data to src_node data
+    else
+        return
+8.  if (not keep)
+        remove(root, pwd, src_path)
+    end if
+STOP
+```
+> Time Complexity = O(m*h) <br />
+Auxiliary Space = O(1)
+
+
+### cat(root, pwd, path)
+> This algorithm displays the contents of the file in given path
+```python
+START
+1.  set node to find_node(root, pwd, path)
+2.  if (node is null)
+        print path does not exist
+        return
+    end if
+3.  if (node is not file)
+        print path is not a file
+        return
+    end if
+4.  if (node does not have read permission)
+        print path does not have read permission
+        return
+    end if
+5.  loop (for each line in node->content) print line
+STOP
+```
+> Time Complexity = O(m*h) <br />
+Auxiliary Space = O(1)
+
+
+### edit(root, pwd, path)
+> This algorithm change the contents of file in given path
+```python
+START
+1.  set node to find_node(root, pwd, path)
+2.  if (node is null)
+        if (create new file)
+            set node to create(root, pwd, path, '-')
+        else
+            return
+        end if
+    end if
+3.  if (node is not a file)
+        print path is not a file
+        return
+    end if
+4.  if (file is not empty)
+        if (node does not have read permission)
+            print path does not have read permission
+        else
+            print contents of file
+        end if
+        if (node does not have write permission)
+            print path does not have write permission
+            return
+        end if
+        if (not overwrite) return
+5.  clear node->content
+6.  read lines as string and push to node->content
+STOP
+```
+> Time Complexity = O(m*h) <br />
+Auxiliary Space = O(1)

@@ -1,3 +1,5 @@
-test.cpp
-TODO.md
 .vscode/
+test*
+main
+TODO.md
+*.txt

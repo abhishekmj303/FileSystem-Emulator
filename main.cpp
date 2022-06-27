@@ -44,7 +44,7 @@ public:
 void linux_tree(TreeNode* root);
 void print_help();
 void print_tree(TreeNode* root, string prev);
-void print_ls(TreeNode* root);
+void print_ls(TreeNode* pwd);
 void print_stat(TreeNode* root, TreeNode* pwd, string path);
 string pwd_str(TreeNode* root, TreeNode* pwd);
 list<string> find_names(TreeNode* root, TreeNode* pwd, string name);
@@ -81,9 +81,10 @@ int main()
         {
             if (args.size() == 1)
                 print_ls(pwd->child);
-            else
+            else while (args.size() != 1)
             {
                 args.pop_front();
+                cout << args.front() << ":" << endl;
                 temp_pwd = cd(root, pwd, args.front());
                 if (temp_pwd != NULL)
                     print_ls(temp_pwd->child);
@@ -91,12 +92,12 @@ int main()
         }
         else if (args.front() == "tree")
         {
-            cout << "." << endl;
             if (args.size() == 1)
                 print_tree(pwd->child, "");
-            else
+            else while (args.size() != 1)
             {
                 args.pop_front();
+                cout << args.front() << ":\n.\n";
                 temp_pwd = cd(root, pwd, args.front());
                 if (temp_pwd != NULL)
                     print_tree(temp_pwd->child, "");
@@ -241,6 +242,7 @@ int main()
 void print_help()
 {
     cout << "*** Follows the syntax of linux shell commands ***" << endl << endl;
+    cout << "\thelp - print following message" << endl;
     cout << "\tls - list directory" << endl;
     cout << "\tcd - change directory" << endl;
     cout << "\ttree - display the files/directory in tree view" << endl;
@@ -295,15 +297,15 @@ void print_tree(TreeNode* root, string prev)
     }
 }
 
-void print_ls(TreeNode* root)
+void print_ls(TreeNode* pwd)
 {
-    if (root != NULL)
+    if (pwd != NULL)
     {
-        cout << root->type << root->get_perm() << " " << root->mdate << " " << root->name;
-        if (root->type == 'd') cout << "/";
+        cout << pwd->type << pwd->get_perm() << " " << pwd->mdate << " " << pwd->name;
+        if (pwd->type == 'd') cout << "/";
         cout << endl;
 
-        print_ls(root->link);
+        print_ls(pwd->link);
     }
 }
 
@@ -551,7 +553,7 @@ void dupl(TreeNode* root, TreeNode* pwd, string src, string dst, int keep)
     TreeNode* dst_node = find_node(root, pwd, dst);
     if (dst_node != NULL && dst_node->type == 'd')
     {
-        dst += "/" + split_name(src)[1];
+        dst += "/" + src_node->name;
     }
 
     TreeNode* new_node = create(root, pwd, dst, src_node->type);
