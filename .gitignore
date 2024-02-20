@@ -4,3 +4,5 @@ test*
 main
 TODO.md
 *.txt
+*.docx
+*.pdf
